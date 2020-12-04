@@ -1,0 +1,25 @@
+.judgement_block{
+  overflow-y: auto;
+  margin-top: 2%;
+    width: 100%;
+    height: 400px;
+}
+#pre_1{
+  width: 100%;
+}
+.docsource_main{
+  color: red;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 8px;
+}
+.doc_title{
+  text-align: center;
+}
+.doc_citations{
+  text-align: center;
+}
+.doc_bench{
+  text-align: center;
+  margin-bottom: 12px;
+}

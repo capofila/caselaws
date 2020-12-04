@@ -1,0 +1,61 @@
+
+.col-6, .col-4, .col-2{
+    margin-top: 2px;
+    margin-bottom: 2px;
+    border-left: 0;
+
+}
+.card-title{
+    padding: 10px;
+    margin: 0px;
+}
+
+.heading{
+  font-weight: bold;
+}
+.main_title{
+  color: black;
+  text-shadow: 0px 4px 10px #ffffff;
+}
+.title{
+  margin-top: 8px;
+  font-weight: bold;
+  font-size: 18px;
+  background-color: #6c757d;
+  color:white;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  border: 1px solid black;
+  padding: 1%;
+}
+.result_card{
+  box-shadow:0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
+}
+
+.judgement{
+  font-size: 18px;
+  text-align:center;
+  text-shadow: 0px 4px 0px 	#FFFF99;
+  font-weight: bold;
+  color: #c01700;
+  cursor: pointer;
+}
+.judgement_row{
+  margin-top: 2%;
+}
+.blink{
+  text-align: center;
+
+}
+
+p_blink{
+  animation: blink 1s linear infinite;
+}
+@keyframes blink{
+0%{opacity: 0;}
+50%{opacity: .5;}
+100%{opacity: 1;}
+}
+.cursor{
+  cursor: pointer;
+}

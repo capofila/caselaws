@@ -1,0 +1,25 @@
+
+table, th, td {
+  border: 1px solid black;
+  text-align: left;
+  padding: 1px;
+  font-size: 10pt;
+  font-weight:600;
+  word-wrap: break-word;
+  text-wrap: normal;
+}
+table{
+width: 100%;
+
+}
+
+tr:hover {background-color: #f5f5f5;}
+.right_tab{
+  float: right;
+}
+court_data{
+  width: 40px;
+}
+th,td,tr{
+  margin-left: 5px;
+}

@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+
+  caselaws-prod:
+    container_name: caselaws-prod
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '80:80'
+      - '443:443'
+  cert-bot:
+    image: certbot/certbot
