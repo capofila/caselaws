@@ -1,0 +1,7 @@
+version: '3.7'
+
+services:
+  caselaws-webservice:
+    image: karam/caselaws:webservice
+    ports:
+      - "8080:8080"
