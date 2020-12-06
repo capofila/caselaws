@@ -1,3 +1,4 @@
+*.log
 node_modules/
 cms/data
 cms/cert
