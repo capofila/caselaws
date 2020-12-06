@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Button, Container, Dropdown, Form, Col } from 'react-bootstrap'
 import './css/Search.css';
 import useForm from "react-hook-form";
 import AdvanceSearch from './AdvanceSearch';
@@ -25,9 +26,9 @@ const SearchComponent = (props) => {
     props.search(s, mainCourtType);
   }
   const callAdvanceSearch = (DocOrCitationOrTitle, Title, CitationNumber, Author, Bench, OrderBy, FromDate, ToDate, mainCourtType) => {
-    
+
     props.advanceSearch(DocOrCitationOrTitle, Title, CitationNumber, Author, Bench, OrderBy, FromDate, ToDate, mainCourtType);
-      log.warn("advance Search Called");
+    log.warn("advance Search Called");
   }
 
   const callRecent = () => {
@@ -40,32 +41,42 @@ const SearchComponent = (props) => {
     courtNameArray.push(courtArr[i]);
     i = i + 2;
   }
-  return (
-    <div className="row">
-      {/**Search Form*/}
-      <div className="col-md-12">
-        <div className="d-flex justify-content-center">
-          <form className="input-group col-md-8" onSubmit={handleSubmit(callSearchFunction)}>
-            <input
-              type="search"
-              className="form-control"
-              placeholder="Search"
-              name="txtMainSearch"
-              ref={register({ required: "This is Required" })}
-            />
 
-            <select value={mainCourtType} onChange={handleCourtType} className="custom-select-md" >
+  // ;
+  return (
+    <Container>
+      <Form onSubmit={handleSubmit(callSearchFunction)} >
+        <Form.Row>
+          <Col lg={7} md={4} sm={12} xs={12}>
+            <Form.Group controlId="exampleForm.ControlInput1">
+              <Form.Control
+                type="text"
+                required="true"
+                placeholder="Ex. search judgement, tribunal, judge name etc."
+                name="txtMainSearch"
+                ref={register({ required: "This is Required" })}
+              />
+            </Form.Group>
+          </Col>
+          <Col lg={3} md={4} sm={12} xs={12}>
+            <Form.Group controlId="exampleForm.SelectCustom">
+              <Form.Control as="select" custom value={mainCourtType} onChange={handleCourtType} >
                 <option value="All">All Court</option>
                 {courtNameArray.map((courtNames, index) => {
-                return <option key={index} value={courtNames}>{courtNames}</option>
-              })}
-            </select>
-            <button type="submit" className="btn btn-secondary" style={{ marginLeft: '5px' }} onClick={callRecent}>Search</button>
-            {/* <button type="submit" className="btn btn-secondary" style={{marginLeft: '5px'}}>Search</button> */}
-          </form>
-        </div>
-      </div>
-      {/**End of Search Form*/}
+                  return <option key={index} value={courtNames}>{courtNames}</option>
+                })}
+              </Form.Control>
+            </Form.Group>
+          </Col>
+          <Col lg={2} md={4} sm={12} xs={12}>
+            <Button variant="primary" type="submit" block>
+              Search
+            </Button>
+          </Col>
+
+        </Form.Row>
+      </Form>
+
       <div className="col-12 col-md-12">
         <p className="error" style={{ textAlign: 'center', marginTop: '4px' }}>
           {errors.txtMainSearch && <p>{errors.txtMainSearch.message}</p>}
@@ -75,7 +86,7 @@ const SearchComponent = (props) => {
           advanceSearch={callAdvanceSearch}
           courtName={courtNameArray} />
       </div>
-    </div>
+    </Container>
   );
 }
 export default SearchComponent;

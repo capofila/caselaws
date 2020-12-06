@@ -2,7 +2,7 @@
 import ReactGA from 'react-ga';
 
 import React, { Component } from 'react';
-import { Navbar, NavDropdown, Nav } from 'react-bootstrap' //npm install react-bootstrap bootstrap
+import { Navbar, Container, Nav } from 'react-bootstrap' //npm install react-bootstrap bootstrap
 import axios from 'axios';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom' //npm install react-router-dom --save
 import './App.css';
@@ -22,6 +22,7 @@ import Employer from '../pages/Employer'
 import Contact from '../pages/Contact'
 import Login from '../pages/Login'
 import { useEffect } from 'react';
+import TermsAndConditions from '../pages/TermsAndConditions'
 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -366,7 +367,6 @@ class App extends Component {
           <marquee direction='down'>
             {this.state.recentCase.map((res) => {
               return (
-
                 <RecentCase
                   click={(event) => this.recentCaseClick(res.id)}
                   key={res.id}
@@ -383,6 +383,7 @@ class App extends Component {
 
     return (
       <div className="custom" margin="4%">
+        
         <Router>
           <Navbar fixed="top" collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Navbar.Brand href="http://www.caselaws.org">Case Laws</Navbar.Brand>
@@ -424,7 +425,7 @@ class App extends Component {
             <Route exact path="/contact" component={Contact}></Route>
             <Route exact path="/employer" component={Employer}></Route>
             <Route exact path="/login" component={Login}></Route>
-
+            <Container>
             <div className="h-100">
               {/*Logo*/}
               <div className="row">
@@ -453,6 +454,7 @@ class App extends Component {
               {/**End of Search Form*/}
 
             </div>
+            </Container>
           </Switch>
         </Router>
 
@@ -478,7 +480,7 @@ class App extends Component {
           </div>
 
           {/* Empty column */}
-          <div className="col-md-2 col-sm-2 col-xs-2 padding-right" style={{ marginTop: '20px' }}>
+          <div className="col-md-12 col-sm-2 col-xs-2 padding-right collapse" style={{ marginTop: '20px' }}>
             {this.state.showRecent ? (
               <div className="card rounded searchHistoryCard">
                 <div className="card-title recent_heading">
@@ -498,9 +500,11 @@ class App extends Component {
         </div>
         {/*footer starts*/}
         <footer className="page-footer font-small blue footer">
-          <div className="footer-copyright text-center py-3">All right reserved by CaseLaws © 2020 Copyright: wwww.caselaws.org</div>
+          <div className="footer-copyright text-center py-3">All right reserved by CaseLaws Â© 2020 Copyright: wwww.caselaws.org</div>
+          <TermsAndConditions></TermsAndConditions>
         </footer>
         {/*footer Ends*/}
+        
       </div>
 
     );
