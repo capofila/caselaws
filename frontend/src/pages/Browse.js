@@ -52,7 +52,7 @@ function Person() {
 }
 
 const PEEPS = [
-  { id: 0, name: "Cases", friends: [1, 2, 3] },
+  { id: 0, name: "Courts", friends: [1, 2, 3] },
   { id: 1, name: "Tribunal", friends: [0, 3] },
   { id: 2, name: "Judgements", friends: [0, 1, 3] },
   { id: 3, name: "Laws", friends: [1, 2] }

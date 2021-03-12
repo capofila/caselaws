@@ -275,7 +275,7 @@ const AdvanceSearch = (props) => {
         </form>
       </Modal >
     </div>
-    <Browse></Browse>
+    {/* <Browse></Browse> */}
     </>
   );
 }

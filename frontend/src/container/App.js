@@ -289,6 +289,7 @@ class App extends Component {
    */
 
   loadMore = () => {
+    this.setState({loading:true})
     const { row, start, law, loadMoreCount } = this.state;
     this.setState(prevState => ({
       start: prevState.start + 20,
