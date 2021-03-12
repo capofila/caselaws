@@ -176,7 +176,7 @@ export default function TermsAndConditions() {
       }
     return (
         <>
-            <Button variant="primary" onClick={handleShow}>
+            <Button variant="link" size="xs" onClick={handleShow}>
                 Terms &amp; conditions.
             </Button>
 

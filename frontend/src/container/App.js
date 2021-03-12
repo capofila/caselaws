@@ -1,6 +1,4 @@
-//import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom' //npm install react-router-dom --save
 import ReactGA from 'react-ga';
-
 import React, { Component } from 'react';
 import { Navbar, Container, Nav } from 'react-bootstrap' //npm install react-bootstrap bootstrap
 import axios from 'axios';
@@ -40,7 +38,20 @@ const webserviceHost = config.webservice.host;
 const webservicePort = config.webservice.port;
 const webserviceIp = webserviceHost + ":" + webservicePort;
 console.log(webserviceIp);
+var es2015 = require('babel-preset-es2015');
+var presetReact = require('babel-preset-react');
+var sss = require("babel-register")({ presets: [es2015, presetReact] });
+//Import our routes
+var router = require("./routes").default;
+var Sitemap = require("react-router-sitemap").default;
 
+function generateSitemap() {
+  return (
+    new Sitemap(router())
+      .build("http://www.caselaws.org")
+      .save("../../public/sitemap.xml")
+  );
+}
 class App extends Component {
   state = {
     law: [],
@@ -291,9 +302,9 @@ class App extends Component {
       start: prevState.start + 20,
       loadMore: prevState.loadMore + 1,
     }))
-   
+
     //axios.get(serverIp + `/solr/caselaws_v2/select?${this.state.courtType === 'all' || this.state.courtType === '' ? '' : 'fq=court_name: ' + this.state.courtType + '&'}q=case_title: (${this.state.searchString}) OR petitioner_name: (${this.state.searchString}) OR citation_name: (${this.state.searchString}) OR respondent_name: (${this.state.searchString}) OR judge_name: (${this.state.searchString}) &rows=${row}&start=${start}`)
-    
+
     axios.get(serverIp + `/solr/caselaws_v2/select?${this.state.courtType === 'all' || this.state.courtType === '' ? '' : 'fq=court_name: ' + this.state.courtType + '&'}q=judgement_html: (${this.state.searchString})&rows=${row}&start=${start}`)
       .then(response => {
         if (this.state.noOfPages > 0) {
@@ -314,8 +325,8 @@ class App extends Component {
             this.style_anchor = { display: 'none' };
             this.setState({ loading: false })
             const notify = () => toast("Wow so easy !");
-            return 
-              alert('not found');
+            return
+            alert('not found');
           }
         }
       }
@@ -326,24 +337,25 @@ class App extends Component {
       )
   }
 
+  
 
-  /**
-     * Render method starts..........
-     */
-  render() {
-    let law = null;
-    let loading = null;
-    let recent = null;
+/**
+   * Render method starts..........
+   */
+render() {
+  let law = null;
+  let loading = null;
+  let recent = null;
 
-    if (this.state.loading) {
-      loading = (<SpinnerPage />);
-    } else {
-      law = (
-        <div style={{ marginBottom: '300px' }}>
+  if (this.state.loading) {
+    loading = (<SpinnerPage />);
+  } else {
+    law = (
+      <div style={{ marginBottom: '300px' }}>
 
-          <Laws
-            law={this.state.law} />
-          {/* {this.state.law.map((res) => {
+        <Laws
+          law={this.state.law} />
+        {/* {this.state.law.map((res) => {
             return(
               <ResultList
                 key={res.id}
@@ -351,45 +363,45 @@ class App extends Component {
               />)
             })
           } */}
-          <center style={{ marginTop: '5px', cursor: 'pointer', color: 'blue' }}><p onClick={this.loadMore} style={this.style_anchor}>Load More</p></center>
-          <div>
-          </div>
+        <center style={{ marginTop: '5px', cursor: 'pointer', color: 'blue' }}><p onClick={this.loadMore} style={this.style_anchor}>Load More</p></center>
+        <div>
         </div>
-      );
-    }
+      </div>
+    );
+  }
 
-    if (this.state.showRecent && this.state.law !== null) {
-      recent = (
-        <div className="card rounded recentCaseCard">
-          <div className="card-title recentCaseHeading">
-            <h6 style={{ textAlign: 'center' }} className="">Recent Judgements</h6>
-          </div>
-          <marquee direction='down'>
-            {this.state.recentCase.map((res) => {
-              return (
-                <RecentCase
-                  click={(event) => this.recentCaseClick(res.id)}
-                  key={res.id}
-                  id={res.id}
-                  recentCase={res.case_title} />
-              )
-            })} </marquee>
+  if (this.state.showRecent && this.state.law !== null) {
+    recent = (
+      <div className="card rounded recentCaseCard">
+        <div className="card-title recentCaseHeading">
+          <h6 style={{ textAlign: 'center' }} className="">Recent Judgements</h6>
         </div>
-      );
+        <marquee direction='down'>
+          {this.state.recentCase.map((res) => {
+            return (
+              <RecentCase
+                click={(event) => this.recentCaseClick(res.id)}
+                key={res.id}
+                id={res.id}
+                recentCase={res.case_title} />
+            )
+          })} </marquee>
+      </div>
+    );
 
-    } else {
-      recent = (null);
-    }
+  } else {
+    recent = (null);
+  }
 
-    return (
-      <div className="custom" margin="4%">
-        
-        <Router>
-          <Navbar fixed="top" collapseOnSelect expand="lg" bg="dark" variant="dark">
-            <Navbar.Brand href="http://www.caselaws.org">Case Laws</Navbar.Brand>
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-            <Navbar.Collapse id="responsive-navbar-nav">
-              {/*<Nav className="mr-auto">
+  return (
+    <div className="custom" margin="4%">
+
+      <Router>
+        <Navbar fixed="top" collapseOnSelect expand="lg" bg="dark" variant="dark">
+          <Navbar.Brand href="http://www.caselaws.org">Case Laws</Navbar.Brand>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
+            {/*<Nav className="mr-auto">
             <Nav.Link href="#judgements">Judgements</Nav.Link>
             <Nav.Link href="#recentCase">RecentCase</Nav.Link>
             <NavDropdown title="More" id="collasible-nav-dropdown">
@@ -401,31 +413,31 @@ class App extends Component {
               <NavDropdown.Item href="https://forms.gle/CAPUnrM9Lcjdsgov7">Career</NavDropdown.Item>
             </NavDropdown>
           </Nav>*/}
-              <Nav className="mr-auto">
-              </Nav>
+            <Nav className="mr-auto">
+            </Nav>
 
-              {/*<Nav>
+            {/*<Nav>
             <Nav.Link href="https://forms.gle/CAPUnrM9Lcjdsgov7">Careers</Nav.Link>
               <Nav.Link href="https://forms.gle/6Q1ZoDxsJ6VCsijK6">Employers</Nav.Link>
               <Nav.Link eventKey={2} href="/about">About</Nav.Link>
             </Nav>*/}
-              <Nav>
-                <Nav.Link href="/career">Careers</Nav.Link>
-                <Nav.Link href="/employer">Employers</Nav.Link>
-                <Nav.Link eventKey={2} href="/about">About</Nav.Link>
-                <Nav.Link href="/policy">Policy</Nav.Link>
-                <Nav.Link href="/contact">Contact</Nav.Link>
-              </Nav>
-            </Navbar.Collapse>
-          </Navbar>
-          <Switch>
-            <Route exact path="/about" component={About}></Route>
-            <Route exact path="/policy" component={Policy}></Route>
-            <Route exact path="/career" component={Career}></Route>
-            <Route exact path="/contact" component={Contact}></Route>
-            <Route exact path="/employer" component={Employer}></Route>
-            <Route exact path="/login" component={Login}></Route>
-            <Container>
+            <Nav>
+              <Nav.Link href="/career">Careers</Nav.Link>
+              <Nav.Link href="/employer">Employers</Nav.Link>
+              <Nav.Link eventKey={2} href="/about">About</Nav.Link>
+              <Nav.Link href="/policy">Policy</Nav.Link>
+              <Nav.Link href="/contact">Contact</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+        <Switch>
+          <Route exact path="/about" component={About}></Route>
+          <Route exact path="/policy" component={Policy}></Route>
+          <Route exact path="/career" component={Career}></Route>
+          <Route exact path="/contact" component={Contact}></Route>
+          <Route exact path="/employer" component={Employer}></Route>
+          <Route exact path="/login" component={Login}></Route>
+          <Container>
             <div className="h-100">
               {/*Logo*/}
               <div className="row">
@@ -454,60 +466,64 @@ class App extends Component {
               {/**End of Search Form*/}
 
             </div>
-            </Container>
-          </Switch>
-        </Router>
+          </Container>
+        </Switch>
+      </Router>
 
-        <div className="row h-100">
-          {/*Empty col */}
-          <div className="col-md-2 col-sm-2 col-xs-2 padding-left" style={{ marginTop: '20px' }}>
-            {recent}
-          </div>
-
-
-          {/*middle result page*/}
-
-          <div className="col-md-8 col-sm-8 col-xs-8 padding-center" style={{ height: '100%' }}>
-            <div style={{
-              margin: '0',
-              position: 'absolute',
-              top: '50%', left: '50%'
-            }}>
-              {loading}
-            </div>
-            {law}
-
-          </div>
-
-          {/* Empty column */}
-          <div className="col-md-12 col-sm-2 col-xs-2 padding-right collapse" style={{ marginTop: '20px' }}>
-            {this.state.showRecent ? (
-              <div className="card rounded searchHistoryCard">
-                <div className="card-title recent_heading">
-                  <h6 style={{ textAlign: 'center' }} >Recent Search</h6>
-                </div>
-
-                {this.state.recent.map((res) => {
-                  return (
-                    <RecentList
-                      click={() => this.recentSearchClick(res.recentSearch)}
-                      key={res.recentSearchId}
-                      searchKeywords={res.recentSearch} />)
-                })
-                }
-              </div>) : null}
-          </div>
+      <div className="row h-100">
+        {/*Empty col */}
+        <div className="col-md-2 col-sm-2 col-xs-2 padding-left" style={{ marginTop: '20px' }}>
+          {recent}
         </div>
-        {/*footer starts*/}
-        <footer className="page-footer font-small blue footer">
-          <div className="footer-copyright text-center py-3">All right reserved by CaseLaws © 2020 Copyright: wwww.caselaws.org</div>
-          <TermsAndConditions></TermsAndConditions>
-        </footer>
-        {/*footer Ends*/}
-        
-      </div>
 
-    );
-  }
+
+        {/*middle result page*/}
+
+        <div className="col-md-8 col-sm-8 col-xs-8 padding-center" style={{ height: '100%' }}>
+          <div style={{
+            margin: '0',
+            position: 'absolute',
+            top: '50%', left: '50%'
+          }}>
+            {loading}
+          </div>
+          {law}
+
+        </div>
+
+        {/* Empty column */}
+        <div className="col-md-12 col-sm-2 col-xs-2 padding-right collapse" style={{ marginTop: '20px' }}>
+          {this.state.showRecent ? (
+            <div className="card rounded searchHistoryCard">
+              <div className="card-title recent_heading">
+                <h6 style={{ textAlign: 'center' }} >Recent Search</h6>
+              </div>
+
+              {this.state.recent.map((res) => {
+                return (
+                  <RecentList
+                    click={() => this.recentSearchClick(res.recentSearch)}
+                    key={res.recentSearchId}
+                    searchKeywords={res.recentSearch} />)
+              })
+              }
+            </div>) : null}
+        </div>
+      </div>
+      {/*footer starts*/}
+      <footer className="page-footer font-small blue footer">
+        <div className="footer-copyright text-center py-3">All right reserved by CaseLaws © 2020 Copyright: wwww.caselaws.org
+          <TermsAndConditions></TermsAndConditions>
+        </div>
+
+
+      </footer>
+      {/*footer Ends*/}
+
+    </div>
+
+  );
 }
+}
+generateSitemap();
 export default App;

@@ -16,7 +16,7 @@ export default class Career extends React.Component {
     }
 
     submitHandler = (e) => {
-        const url = "http://155.138.197.117:1337/logins";
+        const url = "http://155.138.197.117:1337/login";
         e.preventDefault();
         const formData = {
             username: this.state.username,
