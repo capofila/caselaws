@@ -8,9 +8,7 @@ const Contact = () => {
                 Contact us
       </h2>
                 <p className="text-center w-responsive mx-auto pb-5">
-                    We are always commited to provide better and authentic services to our user and we belive
-                    in bes quality service. Please let us know how we may serve you better or give us an email in case
-                    you need some information regarding the services we offer.
+                We are always committed to provide better and authentic services to our users and we believe in the best quality service. Please let us know how we may serve you better or give us an email in case you need some information regarding the services we offer.
       </p>
                 <MDBRow>
                     <MDBCol lg="5" className="lg-0 mb-4">

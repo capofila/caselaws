@@ -1,95 +1,139 @@
-.margin-top{
-  margin-top: 5%;
+.margin-top {
+    margin-top: 5%;
 }
-.logo1{
-  width:10%; 
-  height:10%; 
-  margin-top:15px;
+
+.logo1 {
+    width: 10%;
+    height: 10%;
+    margin-top: 15px;
 }
-#copyright{
-  background-color: #37464D;
+
+#copyright {
+    background-color: #37464D;
 }
+
 body {
-overflow-x: hidden;
-}
-#copyright{
-  position: absolute;
-  bottom: 0;
-  width: 110%;
-  color: white;
-  background-color: #37464D;
-}
-.footer{
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  background-color: #293339;
-  color: white;
-  text-align: center;
-}
-.logo{
-  float: right;
-  padding: 0px;
-  width: 30%;
-  height: 30%;
-}
-.col-12{
-  float:none;
-}
-.body{
-  background-color:#f8f9fa;
-  height:100%;
-}
-.main_title{
-  font-family:Times New Roman, Times, serif; 
-  font-weight:600;
-   margin-bottom:2%;
-}
-.recent_heading{
-
-   margin-top: 10px;
-   font-weight: bold;
-   font-size: 18px;
-   background-color: #6c757d;
-   color:white;
-   margin-top: 0px;
-   margin-bottom: 0px;
-   border: 1px solid black;
-   padding: 1%;
-   margin-top: 22px;
- 
-}
-.searchHistoryCard{
-  margin-right: 10px;
-  padding: 6px; 
-  box-shadow:0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
-}
-.recentCaseHeading{
-  margin-top: 10px;
-  font-weight: bold;
-  font-size: 18px;
-  background-color: #6c757d;
-  color:white;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  border: 1px solid black;
-  padding: 1%;
-  margin-top: 22px;
-}
-.recentCaseCard{
-  margin-left:10px;
-  padding: 6px; 
-  box-shadow:0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
-}
-.padding-center{
-  padding-right:0;
-  padding-left:0;
-}
-.padding-left{
-  padding-right: 0;
+    overflow-x: hidden;
 }
 
-.padding-right{
-  padding-left: 0;
+#copyright {
+    position: absolute;
+    bottom: 0;
+    width: 110%;
+    color: white;
+    background-color: #37464D;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #293339;
+    color: white;
+    text-align: center;
+}
+
+.logo {
+    float: right;
+    padding: 0px;
+    width: 30%;
+    height: 30%;
+}
+
+.col-12 {
+    float: none;
+}
+
+.body {
+    background-color: #f8f9fa;
+    height: 100%;
+}
+
+.main_title {
+    font-family: Times New Roman, Times, serif;
+    font-weight: 600;
+    margin-bottom: 2%;
+}
+
+.recent_heading {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 18px;
+    background-color: #6c757d;
+    color: white;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    border: 1px solid black;
+    padding: 1%;
+    margin-top: 22px;
+}
+
+.searchHistoryCard {
+    margin-right: 10px;
+    padding: 6px;
+    box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+}
+
+.recentCaseHeading {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 18px;
+    background-color: #6c757d;
+    color: white;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    border: 1px solid black;
+    padding: 1%;
+    margin-top: 22px;
+}
+
+.recentCaseCard {
+    margin-left: 10px;
+    padding: 6px;
+    box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+}
+
+.padding-center {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.padding-left {
+    padding-right: 0;
+}
+
+.padding-right {
+    padding-left: 0;
+}
+
+fieldset {
+    background-color: #eeeeee;
+}
+
+.fieldset {
+    background-color: #eeeeee;
+}
+
+#spinner {
+    margin-left: 50%;
+    min-height: 15px;
+}
+
+legend {
+    background-color: gray;
+    color: white;
+    padding: 5px 10px;
+}
+
+.full-width-input {
+    margin: 5px;
+    min-width: 99%;
+    padding: 5px;
+}
+
+.half-width-input {
+    margin: 5px;
+    min-width: 49%;
+    padding: 5px;
 }

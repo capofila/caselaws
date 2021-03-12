@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 import './css/Search.css';
+import Browse from '../pages/Browse'
 import { makeStyles } from '@material-ui/core/styles';
 // import * as log from 'loglevel';
 import TextField from '@material-ui/core/TextField';
@@ -25,7 +32,7 @@ const useStyles = makeStyles(theme => ({
 const AdvanceSearch = (props) => {
   const classes = useStyles();
   const [Doc, setDocState] = useState("");
- const [Title, setTitleState] = useState("");
+  const [Title, setTitleState] = useState("");
   const [Author, setAuthorState] = useState("");
   const [Bench, setBenchState] = useState("");
   const [OrderBy, setOrderBy] = useState("");
@@ -100,14 +107,17 @@ const AdvanceSearch = (props) => {
     // let uppercaseBench = bench.replace(/\s/g, "\\ ");
 
     props.advanceSearch(Doc, Title, Author, Bench, OrderBy, FromDate, ToDate, mainCourtType);
-    
+
     callRecent();
     handleClose();
   }
 
   return (
+    <>
     <div>
       <p onClick={handleShow} className="advanceSearchBtn" style={{ color: 'blue', cursor: 'pointer', textAlign: 'center', marginTop: '10px ' }}>Advance Search</p>
+        
+        
       <Modal show={show} onHide={handleClose}>
         <form onSubmit={onSubmit}>
           <Modal.Header closeButton>
@@ -145,13 +155,13 @@ const AdvanceSearch = (props) => {
                   name="title"
                   onChange={handleTitleInputChanges} />
 
-                 
-                </div>
+
+              </div>
             </div>
             {/*Second Row*/}
             <div className="row">
               <div className="col-6 col-md-6">
-              <TextField
+                <TextField
                   id="outlined-with-placeholder"
                   label="Judge"
                   value={Author}
@@ -161,10 +171,10 @@ const AdvanceSearch = (props) => {
                   name="author"
                   onChange={handleAuthorInputChanges} />
 
-              
+
               </div>
               <div className="col-6 col-md-6">
-              <TextField
+                <TextField
                   id="outlined-with-placeholder"
                   label="Bench"
                   value={Bench}
@@ -265,6 +275,8 @@ const AdvanceSearch = (props) => {
         </form>
       </Modal >
     </div>
+    <Browse></Browse>
+    </>
   );
 }
 export default AdvanceSearch;

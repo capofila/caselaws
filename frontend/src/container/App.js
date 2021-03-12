@@ -19,6 +19,8 @@ import Policy from '../pages/Policy'
 import Employer from '../pages/Employer'
 import Contact from '../pages/Contact'
 import Login from '../pages/Login'
+import Browse from '../pages/Browse'
+
 import { useEffect } from 'react';
 import TermsAndConditions from '../pages/TermsAndConditions'
 
@@ -41,17 +43,7 @@ console.log(webserviceIp);
 var es2015 = require('babel-preset-es2015');
 var presetReact = require('babel-preset-react');
 var sss = require("babel-register")({ presets: [es2015, presetReact] });
-//Import our routes
-var router = require("./routes").default;
-var Sitemap = require("react-router-sitemap").default;
 
-function generateSitemap() {
-  return (
-    new Sitemap(router())
-      .build("http://www.caselaws.org")
-      .save("../../public/sitemap.xml")
-  );
-}
 class App extends Component {
   state = {
     law: [],
@@ -427,6 +419,7 @@ render() {
               <Nav.Link eventKey={2} href="/about">About</Nav.Link>
               <Nav.Link href="/policy">Policy</Nav.Link>
               <Nav.Link href="/contact">Contact</Nav.Link>
+              <Nav.Link href="/login">Login</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
@@ -437,6 +430,7 @@ render() {
           <Route exact path="/contact" component={Contact}></Route>
           <Route exact path="/employer" component={Employer}></Route>
           <Route exact path="/login" component={Login}></Route>
+          {/* <Route exact path="/browse" component={Browse}></Route> */}
           <Container>
             <div className="h-100">
               {/*Logo*/}
@@ -525,5 +519,4 @@ render() {
   );
 }
 }
-generateSitemap();
 export default App;
