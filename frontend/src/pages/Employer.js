@@ -1,6 +1,9 @@
 import React from "react";
 import axios from 'axios'
 import { Form, Col, Button, Container, Row } from 'react-bootstrap'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 class Employer extends React.Component {
     constructor() {
@@ -18,7 +21,8 @@ class Employer extends React.Component {
             profileDescription: '',
             salaryOffered: '',
             numberOfOpenings: '',
-            disclaimer: ''
+            disclaimer: '',
+            loading: false
         }
     }
 
@@ -27,10 +31,13 @@ class Employer extends React.Component {
         this.setState({ [e.target.name]: e.target.value });
         console.log(this.state);
     }
+    
 
     submitHandler = (e) => {
         e.preventDefault();
-        console.log(this.state);
+        this.setState({ loading: true });
+        toast.info("Please wait while your details are being sent.")
+
         const url = "http://155.138.197.117:1337/employers";
         const formData = {
             firstName: this.state.firstName,
@@ -49,17 +56,19 @@ class Employer extends React.Component {
         }
         axios.post(url, formData)
             .then(response => {
-                console.log("Response"); console.log(response);
                 if (typeof response.data.response) {
-                   console.log(response);
-                   alert("Thank your ! we have recieved your request, we will reach out you on your submitted contact details.")
+                    toast.success("Thank your ! we have received your request, we will reach out you on your submitted contact details.")
                 } else {
-                    alert("Oops! We coudn't save your details, please retry");
+                    toast.error("Oops! We couldn't save your details, please retry");
                 }
+                this.setState({ loading: false });
+                setTimeout(5);
+                window.location.reload(false);
             })
             .then(error => {
                 console.log(error)
             });
+
 
     }
 
@@ -71,6 +80,8 @@ class Employer extends React.Component {
                     <Col>
                         <br></br>
                         <h1>Employer Request </h1>
+                        <ToastContainer />
+
                         <hr></hr>
                     </Col>
                 </Row>
@@ -194,7 +205,8 @@ class Employer extends React.Component {
                                 <Form.Check type="checkbox" label="I agree" name="disclaimer" value={disclaimer} onChange={this.changeHandler} />
                             </Form.Group> */}
 
-                            <Button variant="primary" type="submit">Submit</Button>
+                            <button className="half-width-input btn-primary" disabled={this.state.loading}>  {this.state.loading ? 'Please wait...' : 'Submit'} </button>
+                            <button className="half-width-input btn-danger" type="reset"> Reset </button>
                         </Form>
                     </Col>
                 </Row>

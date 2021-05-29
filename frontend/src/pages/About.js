@@ -14,11 +14,11 @@ export default function About() {
                         <p>
                             {' '}
                             <p>CaseLaws is a legal portal with an aim to help the people working in legal industry. We have a legal
-                            search engine where lawyers, advocates, legal interns and any other person can search the judgements
-                            made by Hon’ble Supreme Courts and High Courts only. These judgements are available at public domain
+                            search engine where lawyers, advocates, legal interns and any other person can search the judgments
+                            made by Hon’ble Supreme Courts and High Courts only. These judgement are available at public domain
                             and anybody can access it from there but what makes us different is that we provide the information
                             which is available at different domain at one single place in condensed format with just a single click an
-                            individual can find a judgements of various courts at one place. We only provide judgements of Hon’ble
+                            individual can find a judgement of various courts at one place. We only provide judgement of Hon’ble
                             Supreme Court and Hon’ble High Courts only. At CaseLaws we also have a career section where we help
                             law graduates, Legal interns, Advocates…etc. to find jobs in their interested domain and also we help law
             firms to find legal interns and Advocates for them.</p>{' '}

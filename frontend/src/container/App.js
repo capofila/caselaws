@@ -1,18 +1,15 @@
 import ReactGA from 'react-ga';
 import React, { Component } from 'react';
-import { Navbar, Container, Nav } from 'react-bootstrap' //npm install react-bootstrap bootstrap
+import { Navbar, ProgressBar, Nav } from 'react-bootstrap'
 import axios from 'axios';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom' //npm install react-router-dom --save
+import { BrowserRouter as Switch, Route } from 'react-router-dom' //npm install react-router-dom --save
 import './App.css';
 import SearchComponent from '../components/SearchComponent';
 import * as log from 'loglevel';
-import logo from '../assets/logo.png';
 import SpinnerPage from '../components/LoadingSpinner';
 import RecentList from '../components/Recents/RecentList';
 import RecentCase from '../components/Recents/RecentCase';
 import Laws from '../components/Laws/Laws';
-import { BounceLoader, BarLoader, BeatLoader } from 'react-spinner'
-import { usePromiseTracker } from "react-promise-tracker";
 import About from '../pages/About'
 import Career from '../pages/Career'
 import Policy from '../pages/Policy'
@@ -20,13 +17,11 @@ import Employer from '../pages/Employer'
 import Contact from '../pages/Contact'
 import Login from '../pages/Login'
 import Browse from '../pages/Browse'
-
-import { useEffect } from 'react';
+import Dashboard from '../pages/Dashboard'
 import TermsAndConditions from '../pages/TermsAndConditions'
 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { trackPromise } from 'react-promise-tracker';
 const config = require('../config/AppConfig');
 
 //solr acccess: 
@@ -40,9 +35,6 @@ const webserviceHost = config.webservice.host;
 const webservicePort = config.webservice.port;
 const webserviceIp = webserviceHost + ":" + webservicePort;
 console.log(webserviceIp);
-var es2015 = require('babel-preset-es2015');
-var presetReact = require('babel-preset-react');
-var sss = require("babel-register")({ presets: [es2015, presetReact] });
 
 class App extends Component {
   state = {
@@ -53,7 +45,7 @@ class App extends Component {
     recentCase: [],
     row: 20,
     start: 0,
-    searchString: null,
+    searchString: '*:*',
     courtType: '*',
     courtNames: [],
     noOfPages: null,
@@ -89,8 +81,7 @@ class App extends Component {
         console.log("entry made to recent search registry for " + searchValue)
       ).then(error => { console.log(error) })
 
-
-    axios.get(serverIp + `/solr/caselaws_v2/select?${this.state.courtType === 'all' || this.state.courtType === '' || this.state.courtType === 'All' ? '' : 'fq=court_name: ' + this.state.courtType + '&'}q=judgement_html: (${this.state.searchString}) &rows=${row}&start=${start}`)
+      axios.get(serverIp + `/solr/caselaws_v2/select?q=judgement_html:\"${this.state.searchString}\" ${(this.state.courtType === 'all' || this.state.courtType === '') ? '' : ' AND court_name:'+ this.state.courtType}&rows=${row}&start=${start}` )
       .then(response => {
         /**
          * Pagination calculations.....
@@ -126,8 +117,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    ReactGA.initialize('G-DJ4F2RDBQ2')
-    ReactGA.pageview(window.location.pathname + window.location.search);
+    // ReactGA.initialize('G-DJ4F2RDBQ2')
+    // ReactGA.pageview(window.location.pathname + window.location.search);
     axios.get(serverIp + `/solr/court_names/select?facet.field=court_name&facet=on&fl=court_name&q=*%3A*`)
       .then(response => {
         this.setState({
@@ -143,6 +134,10 @@ class App extends Component {
    * @param bench, @param orderBy, @param startDate/FromDate, @param endDate/ToDate, @param courtType,
    * --------------------------------------------------------------------------------------------------
    */
+  /*
+  fl=case_title,judge_name,id,judgement_html,judgement,date_of_judgement,citation_name,respondent_name,court_name,petitioner_name&q=judgement_html:"maneka" AND 
+case_title:"maneka" AND court_name:"Delhi High Court"
+  */
 
   AdvanceSearch = (Doc, Title, Author, Bench, OrderBy, FromDate, ToDate, mainCourtType) => {
     this.setState({
@@ -150,41 +145,13 @@ class App extends Component {
     });
     let modifiedToDate = ToDate + 'T00:00:00Z';
 
-    let sql = `/solr/caselaws_v2/select?fq=`;
-    let flag = false;
+    let url = `/solr/caselaws_v2/select?q=(judgement_html:\"${Doc}\"
+    ${Title === '' ? '':' OR case_title:\"'+Title+'\"'}
+    ${Author === '' ? '':' OR judge_name:\"' + Author+'\"'})
+    ${(mainCourtType === 'all' || mainCourtType === '')?'':'AND court_name:\"'+mainCourtType+'\"'}
+    &rows=${this.state.row}&start=${this.state.start}`;
 
-    if (Doc !== "") {
-      sql = sql.concat(`judgement: "${Doc}" &q=*:* `);
-    }
-
-    if (Title !== "") {
-      sql = sql.concat(`AND case_title: "${Title}" `);
-    }
-
-    if (mainCourtType !== "") {
-      sql = sql.concat(`AND court_name: "${mainCourtType}" `);
-    }
-    if (Author !== "") {
-      sql = sql.concat(`AND citation_name: "${Author}" `);
-    }
-    if (!Bench === "") {
-      sql = sql.concat(`AND judge_name: "${Bench}" `);
-    }
-
-    // if (modifiedFromDate !== "" && modifiedToDate !== "") {
-    //   sql = sql.concat(`AND solr_date: [${modifiedFromDate} TO ${modifiedToDate}]`);
-    // }
-
-    if (OrderBy === "Recent") {
-      sql = sql.concat(`&sort=solr_date desc`);
-    }
-    if (OrderBy === "Least Recent") {
-      sql = sql.concat(`&sort=solr_date asc`);
-    }
-
-    if (sql === `/solr/caselaws_v2/select?fq=`) {
-      sql = `/solr/caselaws_v2/select?q=*:*`;
-    }
+    let sql = url;
     console.log("final String is : " + serverIp + sql);
     axios.get(serverIp + sql)
       .then(response => {
@@ -232,9 +199,8 @@ class App extends Component {
    * ---------------------------
    */
   recentJudgements = () => {
-    axios.get(serverIp + `/solr/caselaws_v2/select?fl=case_title%2Cid&q=*%3A*&rows=20&sort=_docid_%20desc`)
+    axios.get(serverIp + `/solr/caselaws_v2/select?fl=case_title,id&q=*:*&rows=20`)
       .then(response => {
-        //console.log(response.data.response.docs); 
         this.setState({
           recentCase: response.data.response.docs
         })
@@ -289,16 +255,14 @@ class App extends Component {
    */
 
   loadMore = () => {
-    this.setState({loading:true})
+    this.setState({ loading: true })
     const { row, start, law, loadMoreCount } = this.state;
     this.setState(prevState => ({
       start: prevState.start + 20,
       loadMore: prevState.loadMore + 1,
     }))
-
-    //axios.get(serverIp + `/solr/caselaws_v2/select?${this.state.courtType === 'all' || this.state.courtType === '' ? '' : 'fq=court_name: ' + this.state.courtType + '&'}q=case_title: (${this.state.searchString}) OR petitioner_name: (${this.state.searchString}) OR citation_name: (${this.state.searchString}) OR respondent_name: (${this.state.searchString}) OR judge_name: (${this.state.searchString}) &rows=${row}&start=${start}`)
-
-    axios.get(serverIp + `/solr/caselaws_v2/select?${this.state.courtType === 'all' || this.state.courtType === '' ? '' : 'fq=court_name: ' + this.state.courtType + '&'}q=judgement_html: (${this.state.searchString})&rows=${row}&start=${start}`)
+    
+    axios.get(serverIp + `/solr/caselaws_v2/select?q=judgement_html:\"${this.state.searchString}\" ${(this.state.courtType === 'all' || this.state.courtType === '') ? '' : ' AND court_name:'+ this.state.courtType}&rows=${row}&start=${start}` )
       .then(response => {
         if (this.state.noOfPages > 0) {
           let clickableLoadMore = Math.ceil(this.state.noOfPages / 10);
@@ -317,9 +281,8 @@ class App extends Component {
           } else {
             this.style_anchor = { display: 'none' };
             this.setState({ loading: false })
-            const notify = () => toast("Wow so easy !");
-            return
             alert('not found');
+            return
           }
         }
       }
@@ -330,66 +293,59 @@ class App extends Component {
       )
   }
 
-  
 
-/**
-   * Render method starts..........
-   */
-render() {
-  let law = null;
-  let loading = null;
-  let recent = null;
 
-  if (this.state.loading) {
-    loading = (<SpinnerPage />);
-  } else {
-    law = (
-      <div style={{ marginBottom: '300px' }}>
+  /**
+     * Render method starts..........
+     */
 
-        <Laws
-          law={this.state.law} />
-        {/* {this.state.law.map((res) => {
-            return(
-              <ResultList
-                key={res.id}
-                {...res}
-              />)
-            })
-          } */}
-        <center style={{ marginTop: '5px', cursor: 'pointer', color: 'blue' }}><p onClick={this.loadMore} style={this.style_anchor}>Load More</p></center>
-        <div>
+  render() {
+    let law = null;
+    let loading = null;
+    let recent = null;
+    let spinnerFlag = false;
+
+    if (this.state.loading && !this.spinnerFlag) {
+      loading = (<SpinnerPage />);
+      this.spinnerFlag = true
+    } else {
+      law = (
+        <div style={{ marginBottom: '300px' }}>
+          <Laws law={this.state.law} />
+          <center style={{ marginTop: '5px', cursor: 'pointer', color: 'blue' }}><p onClick={this.loadMore} style={this.style_anchor}>{this.state.loading ? 'Loading...' : 'Load More'}</p></center>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  if (this.state.showRecent && this.state.law !== null) {
-    recent = (
-      <div className="card rounded recentCaseCard">
-        <div className="card-title recentCaseHeading">
-          <h6 style={{ textAlign: 'center' }} className="">Recent Judgements</h6>
-        </div>
-        <marquee direction='down'>
-          {this.state.recentCase.map((res) => {
-            return (
-              <RecentCase
-                click={(event) => this.recentCaseClick(res.id)}
-                key={res.id}
-                id={res.id}
-                recentCase={res.case_title} />
-            )
-          })} </marquee>
-      </div>
-    );
+//This was used for advance search component
+ 
 
-  } else {
-    recent = (null);
-  }
+    // if (!this.state.showRecent && this.state.law !== null) {
+    //   recent = (
+    //     <div className="card rounded recentCaseCard">
+    //       <div className="card-title recentCaseHeading">
+    //         <h6 style={{ textAlign: 'center' }} className="">Recent Judgement</h6>
+    //       </div>
+    //       <marquee direction='down'>
+    //         {this.state.recentCase.map((res) => {
+    //           return (
+    //             <RecentCase
+    //               click={(event) => this.recentCaseClick(res.id)}
+    //               key={res.id}
+    //               id={res.id}
+    //               recentCase={res.case_title} />
+    //           )
+    //         })} </marquee>
+    //     </div>
+    //   );
 
-  return (
-    <div className="custom" margin="4%">
+    // } else {
+    //   recent = (null);
+    // }
 
-      <Router>
+    return (
+      <div className="custom" margin="4%">
+
         <Navbar fixed="top" collapseOnSelect expand="lg" bg="dark" variant="dark">
           <Navbar.Brand href="http://www.caselaws.org">Case Laws</Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -415,109 +371,94 @@ render() {
               <Nav.Link eventKey={2} href="/about">About</Nav.Link>
             </Nav>*/}
             <Nav>
+              <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/career">Careers</Nav.Link>
               <Nav.Link href="/employer">Employers</Nav.Link>
               <Nav.Link eventKey={2} href="/about">About</Nav.Link>
               <Nav.Link href="/policy">Policy</Nav.Link>
               <Nav.Link href="/contact">Contact</Nav.Link>
+              <Nav.Link href="/browse">Browse</Nav.Link>
               <Nav.Link href="/login">Login</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
+        <br></br>
+        <br></br>
         <Switch>
-          <Route exact path="/about" component={About}></Route>
-          <Route exact path="/policy" component={Policy}></Route>
-          <Route exact path="/career" component={Career}></Route>
-          <Route exact path="/contact" component={Contact}></Route>
-          <Route exact path="/employer" component={Employer}></Route>
-          <Route exact path="/login" component={Login}></Route>
-          {/* <Route exact path="/browse" component={Browse}></Route> */}
-          <Container>
-            <div className="h-100">
-              {/*Logo*/}
-              <div className="row">
+          <Route path="/about" component={About}></Route>
+          <Route path="/policy" component={Policy}></Route>
+          <Route path="/career" component={Career}></Route>
+          <Route path="/contact" component={Contact}></Route>
+          <Route path="/employer" component={Employer}></Route>
+          <Route path="/login" component={Login}></Route>
+          <Route path="/browse" component={Browse}></Route>
+          <Route path="/dashboard" component={Dashboard}></Route>
 
-                <div className="col-12 col-md-12" >
-                  <center>
-                    <a href="http://www.caselaws.org"> <img className="logo1" src={logo} alt="logo" /></a>
-                  </center>
-                </div>
 
-                <div className="col-12 col-md-12">
-                  <center>
-                    <h1 className="main_title">INDIAN CASE LAWS</h1>
-                  </center>
-                </div>
-              </div>
-
-              {/**Search Form*/}
-              <SearchComponent
-                search={this.search}
-                courtName={this.state.courtNames}
-                recentSearch={this.searchHistory}
-                recentJudgements={this.recentJudgements}
-                advanceSearch={this.AdvanceSearch}
-              />
-              {/**End of Search Form*/}
-
-            </div>
-          </Container>
+          <Route exact path="/" component={() => (<SearchComponent
+            search={this.search}
+            courtName={this.state.courtNames}
+            recentSearch={this.searchHistory}
+            recentJudgements={this.recentJudgements}
+            advanceSearch={this.AdvanceSearch}
+          />)} />
         </Switch>
-      </Router>
 
-      <div className="row h-100">
-        {/*Empty col */}
-        <div className="col-md-2 col-sm-2 col-xs-2 padding-left" style={{ marginTop: '20px' }}>
-          {recent}
-        </div>
-
-
-        {/*middle result page*/}
-
-        <div className="col-md-8 col-sm-8 col-xs-8 padding-center" style={{ height: '100%' }}>
-          <div style={{
-            margin: '0',
-            position: 'absolute',
-            top: '50%', left: '50%'
-          }}>
-            {loading}
+        <div className="row h-100">
+          {/*Empty col */}
+          <div className="col-md-2 col-sm-2 col-xs-2 padding-left" style={{ marginTop: '20px' }}>
+            {recent}
           </div>
-          {law}
 
+
+          {/*middle result page*/}
+
+          <div className="col-md-8 col-sm-8 col-xs-8 padding-center" style={{ height: '100%' }}>
+            <div style={{
+              margin: '0',
+              position: 'absolute',
+              top: '50%', left: '50%'
+            }}>
+              {loading}
+            </div>
+            {law}
+
+          </div>
+
+          {/* RecentList Component */}
+          <div className="col-md-12 col-sm-2 col-xs-2 padding-right collapse" style={{ marginTop: '20px' }}>
+            {this.state.showRecent ? (
+              <div className="card rounded searchHistoryCard">
+                <div className="card-title recent_heading">
+                  <h6 style={{ textAlign: 'center' }} >Recent Search</h6>
+                </div>
+
+                {this.state.recent.map((res) => {
+                  return (
+                    <RecentList
+                      click={() => this.recentSearchClick(res.recentSearch)}
+                      key={res.recentSearchId}
+                      searchKeywords={res.recentSearch} />
+                  )
+                })
+                }
+              </div>) : null}
+          </div>
         </div>
 
-        {/* Empty column */}
-        <div className="col-md-12 col-sm-2 col-xs-2 padding-right collapse" style={{ marginTop: '20px' }}>
-          {this.state.showRecent ? (
-            <div className="card rounded searchHistoryCard">
-              <div className="card-title recent_heading">
-                <h6 style={{ textAlign: 'center' }} >Recent Search</h6>
-              </div>
-
-              {this.state.recent.map((res) => {
-                return (
-                  <RecentList
-                    click={() => this.recentSearchClick(res.recentSearch)}
-                    key={res.recentSearchId}
-                    searchKeywords={res.recentSearch} />)
-              })
-              }
-            </div>) : null}
-        </div>
-      </div>
-      {/*footer starts*/}
-      <footer className="page-footer font-small blue footer">
-        <div className="footer-copyright text-center py-3">All right reserved by CaseLaws © 2020 Copyright: wwww.caselaws.org
+        <footer className="page-footer font-small blue footer">
+          <div className="footer-copyright text-center py-3">All right reserved by CaseLaws © 2018-21 Copyright: www.caselaws.org
           <TermsAndConditions></TermsAndConditions>
-        </div>
+          </div>
+        </footer>
+        {/*footer Ends*/}
 
+      </div>
 
-      </footer>
-      {/*footer Ends*/}
-
-    </div>
-
-  );
+    );
+  }
 }
-}
+
+
+
 export default App;

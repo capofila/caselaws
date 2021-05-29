@@ -137,3 +137,8 @@ legend {
     min-width: 49%;
     padding: 5px;
 }
+
+.sidebar {
+    max-width: 240px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }

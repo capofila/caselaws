@@ -1,0 +1,36 @@
+
+.judgementCard {
+    display: inline-block;
+    width: auto;
+    border: 1px solid #DDD;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 5px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.05);
+    padding: 10px;
+  }
+
+
+
+  .judgementCard-content {
+    font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+    padding: 15px;
+    height: 5rem;
+    line-height: 1.5em;
+    overflow: hidden;
+  }
+
+  .judgementCard-title {
+    font-size: 2rem;
+    margin: 0;
+    background-color: cadetblue;
+  }
+  
+  .judgementCard-text {
+    font-size: 1.6rem;
+    line-height: 2rem;
+  }
+
+  * {
+    box-sizing: border-box;
+  }

@@ -1,63 +1,13 @@
-import React from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-  useParams,
-  useRouteMatch
-} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import InfiniteResultComponent from './InfiniteResultComponent'
 
-
-export default function Browse() {
-  return (
-    <Router>
-      <Switch>
-        <Route path="/:id">
-          <Person />
-        </Route>
-        <Route path="/">
-          <Redirect to="/0" />
-        </Route>
-      </Switch>
-    </Router>
-  );
-}
-
-function Person() {
-  let { url } = useRouteMatch();
-  let { id } = useParams();
-  let person = find(parseInt(id));
+function Browse() {
 
   return (
     <div>
-      <h3>{person.name}</h3>
-
-      <ul>
-        {person.friends.map(id => (
-          <li key={id}>
-            <Link to={`${url}/${id}`}>{find(id).name}</Link>
-          </li>
-        ))}
-      </ul>
-
-      <Switch>
-        <Route path={`${url}/:id`}>
-          <Person />
-        </Route>
-      </Switch>
+        { <InfiniteResultComponent></InfiniteResultComponent>}
     </div>
-  );
+  )
 }
 
-const PEEPS = [
-  { id: 0, name: "Courts", friends: [1, 2, 3] },
-  { id: 1, name: "Tribunal", friends: [0, 3] },
-  { id: 2, name: "Judgements", friends: [0, 1, 3] },
-  { id: 3, name: "Laws", friends: [1, 2] }
-];
-
-function find(id) {
-  return PEEPS.find(p => p.id === id);
-}
+export default Browse

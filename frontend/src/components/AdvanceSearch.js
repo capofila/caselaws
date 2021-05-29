@@ -1,17 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Modal } from 'react-bootstrap';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+import { Button, Modal, Spinner } from 'react-bootstrap';
 import './css/Search.css';
-import Browse from '../pages/Browse'
 import { makeStyles } from '@material-ui/core/styles';
-// import * as log from 'loglevel';
 import TextField from '@material-ui/core/TextField';
-//var _ = require('lodash');
 const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
@@ -42,7 +33,8 @@ const AdvanceSearch = (props) => {
   const [mainCourtType, setMainCourtType] = useState("");
   const [helperText, setHelperText] = useState("");
   const [error, setError] = useState(false);
-
+  const [loading, setLoading] = useState(false);
+ 
   const handleDocInputChanges = (e) => {
     if (e.target.value.length < 0) {
       setHelperText('Document/Title/Citation Required');
@@ -50,14 +42,12 @@ const AdvanceSearch = (props) => {
     } else {
       setDocState(e.target.value);
       console.log("document/title" + e.target.value);
-
       setError(false);
       setHelperText("");
     }
   }
   const handleTitleInputChanges = (e) => {
-    console.log("titile" + e.target.value);
-
+    console.log("title" + e.target.value);
     setTitleState(e.target.value);
   }
   const handleAuthorInputChanges = (e) => {
@@ -97,185 +87,174 @@ const AdvanceSearch = (props) => {
     props.callRecent();
   }
   const onSubmit = (event) => {
+    console.log('advance search called');
+    setLoading(true);
     event.preventDefault();
-    // let title_citation = _.startCase(Doc);
-    // let author = _.startCase(Author);
-    // let bench = _.startCase(Bench);
-    // console.log("Title is : " + title_citation);
-    // let uppercaseTitle = title_citation.replace(/\s/g, "\\ ");
-    // let uppercaseAuthor = author.replace(/\s/g, "\\ ");
-    // let uppercaseBench = bench.replace(/\s/g, "\\ ");
-
     props.advanceSearch(Doc, Title, Author, Bench, OrderBy, FromDate, ToDate, mainCourtType);
-
     callRecent();
     handleClose();
+    setLoading(false);
   }
 
   return (
     <>
-    <div>
-      <p onClick={handleShow} className="advanceSearchBtn" style={{ color: 'blue', cursor: 'pointer', textAlign: 'center', marginTop: '10px ' }}>Advance Search</p>
-        
-        
-      <Modal show={show} onHide={handleClose}>
-        <form onSubmit={onSubmit}>
-          <Modal.Header closeButton>
-            <Modal.Title>Advance Search</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {/*First Row*/}
-            <div className="row">
-              <div className="col-6 col-md-6">
+      {loading ? <Spinner></Spinner> : '' }
+      <div>
+        <p onClick={handleShow} className="advanceSearchBtn" style={{ color: 'blue', cursor: 'pointer', textAlign: 'center', marginTop: '10px ' }}>Advance Search</p>
 
-                <TextField
-                  id="outlined-with-placeholder"
-                  label="Search By Judgemnt keywords"
-                  value={Doc}
-                  className={classes.textField}
-                  margin="normal"
-                  variant="outlined"
-                  name="doc"
-                  error={error}
-                  required
-                  helperText={helperText}
-                  onChange={handleDocInputChanges} />
 
+        <Modal show={show} onHide={handleClose}>
+          <form onSubmit={onSubmit}>
+            <Modal.Header closeButton>
+              <Modal.Title>Advance Search</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {/*First Row*/}
+              <div className="row">
+                <div className="col-12 col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                  <TextField fullWidth
+                    id="outlined-with-placeholder"
+                    label="Search By keywords"
+                    className={classes.textField}
+                    margin="normal"
+                    name="doc"
+                    error={error}
+                    required
+                    helperText={helperText}
+                    onChange={handleDocInputChanges}
+                    />
+
+                </div>
               </div>
+              {/*Second Row*/}
+              <div className="row">
 
-              <div className="col-6 col-md-6">
+                <div className="col-6 col-md-6">
 
-                <TextField
-                  id="outlined-with-placeholder"
-                  label="Search by Case Title"
-                  value={Title}
-                  className={classes.textField}
-                  margin="normal"
-                  variant="outlined"
-                  name="title"
-                  onChange={handleTitleInputChanges} />
-
-
-              </div>
-            </div>
-            {/*Second Row*/}
-            <div className="row">
-              <div className="col-6 col-md-6">
-                <TextField
-                  id="outlined-with-placeholder"
-                  label="Judge"
-                  value={Author}
-                  className={classes.textField}
-                  margin="normal"
-                  variant="outlined"
-                  name="author"
-                  onChange={handleAuthorInputChanges} />
+                  <TextField
+                    id="outlined-with-placeholder"
+                    label="Search by Case Title"
+                    value={Title}
+                    className={classes.textField}
+                    margin="normal"
+                    name="title"
+                    onChange={handleTitleInputChanges} />
 
 
-              </div>
-              <div className="col-6 col-md-6">
-                <TextField
+                </div>
+
+                <div className="col-6 col-md-6">
+                  <TextField
+                    id="outlined-with-placeholder"
+                    label="Judge"
+                    value={Author}
+                    className={classes.textField}
+                    margin="normal"
+                    name="author"
+                    onChange={handleAuthorInputChanges} />
+
+
+                </div>
+                {/* <div className="col-6 col-md-6">
+                  <TextField
                   id="outlined-with-placeholder"
                   label="Bench"
                   value={Bench}
                   className={classes.textField}
                   margin="normal"
-                  variant="outlined"
                   name="bench"
                   onChange={handleBenchInputChanges} />
+                </div> */}
               </div>
-            </div>
-            {/*Third Row*/}
+              {/*Third Row*/}
 
-            {/*Order By Fields*/}
-            <div className="row">
-              <div className="col-12 col-md-12">
-                <label className="heading">OrderBy</label>
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="col-md-2">Relevance</div>
-              <div className="col-2 col-md-2">
-                <input
-                  type="radio"
-                  value="Relevance"
-                  name="orderBy"
-                  onChange={handleOrderByInputChanges}
-                />
-              </div>
-              <div className="col-md-2">Recent</div>
-              <div className="col-2 col-md-2">
-                <input
-                  type="radio"
-                  value="Recent"
-                  name="orderBy"
-                  onChange={handleOrderByInputChanges}
-                />
-              </div>
-              <div className="col-md-2">Least Recent</div>
-
-              <div className="col-2 col-md-2">
-                <input
-                  type="radio"
-                  value="Least Recent"
-                  name="orderBy"
-                  onChange={handleOrderByInputChanges}
-                />
-              </div>
-            </div>
-            {/*Date Field Row*/}
-            {/*Fifth Row*/}
-            <div className="row">
-              <div className="col-md-12">
-
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label className="heading">Start Date</label>
-                  <input type="date" name="bday" max="3000-12-31" min="1000-01-01" className="form-control" onChange={handleStartDate} />
+              {/*Order By Fields*/}
+              <div className="row">
+                <div className="col-12 col-md-12">
+                  <label className="heading">OrderBy</label>
                 </div>
               </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label className="heading">End Date</label>
-                  <input type="date" name="bday" min="1000-01-01" max="3000-12-31" className="form-control" onChange={handleEndDate} />
+
+              <div className="row">
+                <div className="col-md-2">Relevance</div>
+                <div className="col-2 col-md-2">
+                  <input
+                    type="radio"
+                    value="Relevance"
+                    name="orderBy"
+                    onChange={handleOrderByInputChanges}
+                  />
+                </div>
+                <div className="col-md-2">Recent</div>
+                <div className="col-2 col-md-2">
+                  <input
+                    type="radio"
+                    value="Recent"
+                    name="orderBy"
+                    onChange={handleOrderByInputChanges}
+                  />
+                </div>
+                <div className="col-md-2">Least Recent</div>
+
+                <div className="col-2 col-md-2">
+                  <input
+                    type="radio"
+                    value="Least Recent"
+                    name="orderBy"
+                    onChange={handleOrderByInputChanges}
+                  />
                 </div>
               </div>
-            </div>
-            {/*Sixth Row*/}
-            <div className="row">
-              <div className="col-md-4">
-                <label className="heading">Court Name</label>
-              </div>
-              <div className="col-md-6">
-                <select value={mainCourtType} onChange={handleCourtType}>
-                  <option>All Courts</option>
-                  {
-                    props.courtName.map((courtNames, index) => {
-                      return <option key={index} value={courtNames}>{courtNames}</option>
-                    })
-                  }
-                </select>
-              </div>
-            </div>
+              {/*Date Field Row*/}
+              {/*Fifth Row*/}
+              <div className="row">
+                <div className="col-md-12">
 
-            {/*Required field Text*/}
-            <div className="row">
-              <div style={{ fontSize: '10px', marginLeft: '2px' }}>* Required Fields</div>
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
+                </div>
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label className="heading">Start Date</label>
+                    <input type="date" name="bday" max="3000-12-31" min="1000-01-01" className="form-control" onChange={handleStartDate} />
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label className="heading">End Date</label>
+                    <input type="date" name="bday" min="1000-01-01" max="3000-12-31" className="form-control" onChange={handleEndDate} />
+                  </div>
+                </div>
+              </div>
+              {/*Sixth Row*/}
+              <div className="row">
+                <div className="col-md-4">
+                  <label className="heading">Court Name</label>
+                </div>
+                <div className="col-md-6">
+                  <select value={mainCourtType} onChange={handleCourtType}>
+                    <option>All Courts</option>
+                    {
+                      props.courtName.map((courtNames, index) => {
+                        return <option key={index} value={courtNames}>{courtNames}</option>
+                      })
+                    }
+                  </select>
+                </div>
+              </div>
 
-            <Button type="submit" variant="primary">Search</Button>
-            <Button variant="secondary" onClick={handleClose}>
-              Close
+              {/*Required field Text*/}
+              <div className="row">
+                <div style={{ fontSize: '10px', marginLeft: '2px' }}>* Required Fields</div>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button type="submit" variant="primary">Search</Button>
+              <Button variant="secondary" onClick={handleClose}>
+                Close
             </Button>
-          </Modal.Footer>
-        </form>
-      </Modal >
-    </div>
-    {/* <Browse></Browse> */}
+            </Modal.Footer>
+          </form>
+        </Modal >
+      </div>
     </>
   );
 }
